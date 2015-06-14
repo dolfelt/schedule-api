@@ -1,0 +1,22 @@
+{
+    "name": "dolfelt/scheduler-api",
+    "description": "A sample structure for a large application using Spark.",
+    "license": "MIT",
+    "require": {
+        "sparkphp/spark": "dev-master",
+        "morris/lessql": "dev-master",
+        "robmorgan/phinx": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Daniel Olfelt",
+            "email": "dolfelt@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev"
+}
