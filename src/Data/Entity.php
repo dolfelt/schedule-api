@@ -1,8 +1,12 @@
 <?php
 namespace App\Data;
 
+use Carbon\Carbon;
+
 abstract class Entity implements \JsonSerializable
 {
+    protected $transformer;
+
     protected $properties = [];
 
     protected $id;
@@ -13,7 +17,7 @@ abstract class Entity implements \JsonSerializable
 
     public function __construct($data = [])
     {
-        $this->data = $data;
+        $this->mapData($data);
     }
 
     public function getId()
@@ -21,17 +25,55 @@ abstract class Entity implements \JsonSerializable
         return $this->id;
     }
 
+    public function has($field)
+    {
+        return array_key_exists($field, $this->properties) || in_array($field, $this->properties);
+    }
+
+    public function getDate($field)
+    {
+        return new Carbon($this->{$field});
+    }
+
+    public function getData()
+    {
+        $object = [];
+        foreach ($this->properties as $k=>$v) {
+            if (is_numeric($k)) {
+                $k = $v;
+                $v = null;
+            }
+            $object[$k] = $this->{$k};
+        }
+
+        return $object;
+    }
+
     public function mapData(array $row)
     {
-        $this->data = $row;
+        foreach ($this->properties as $k=>$v) {
+            if (is_numeric($k)) {
+                $k = $v;
+                $v = null;
+            }
+            if (!array_key_exists($k, $row)) {
+                continue;
+            }
+            $this->{$k} = $row[$k];
+        }
     }
 
     public function jsonSerialize()
     {
-        return $this->data;
+        if ($this->transformer) {
+            $transform = new $this->transformer;
+            return $transform($this);
+        } else {
+            return $this->data;
+        }
     }
 
-    public function __call($name, $args)
+    /*public function __call($name, $args)
     {
         $action = substr($name, 0, 3);
         if (!in_array($action, $this->callMethods)) {
@@ -50,5 +92,5 @@ abstract class Entity implements \JsonSerializable
         if ($action === 'set') {
             $this->data[$field] = $args[0];
         }
-    }
+    }*/
 }

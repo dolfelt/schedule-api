@@ -23,7 +23,7 @@ class PositionMapper extends Mapper
             $query->where('name LIKE ?', $s.'%');
         }
 
-        $result = $paginate->process($query);
+        $result = $paginate->execute($query);
 
         return [$this->mapObjects($result), $paginate];
     }

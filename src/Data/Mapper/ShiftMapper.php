@@ -23,7 +23,7 @@ class ShiftMapper extends Mapper
             $query->where('user_id', $uid);
         }
 
-        $result = $paginate->process($query);
+        $result = $paginate->execute($query);
 
         return [$this->mapObjects($result), $paginate];
     }

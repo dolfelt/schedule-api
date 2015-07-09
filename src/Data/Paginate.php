@@ -19,7 +19,7 @@ class Paginate
         $this->options = $options + static::$defaultOptions;
     }
 
-    public function process(\SelectQuery $query)
+    public function execute(\SelectQuery $query)
     {
         $result = $query
             ->limit($this->options['limit'])
