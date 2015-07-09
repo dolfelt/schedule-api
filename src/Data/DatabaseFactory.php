@@ -1,27 +1,18 @@
 <?php
 namespace App\Data;
 
-use LessQL\Database;
-
 class DatabaseFactory
 {
 
     /**
      * @param $config Configuration for connection
-     * @return Database
+     * @return \FluentPDO
      */
-    public static function connect(array $config = null)
+    public static function connect(array $config)
     {
-        $pdo = new \PDO( 'sqlite:../data/schedule.sqlite3' );
-        $db = new Database( $pdo );
-        static::setup($db);
-
-        return $db;
-    }
-
-    private static function setup(Database $db)
-    {
-        // TODO: Add custom mapping functions and aliases
+        extract($config);
+        $pdo = new PDO( $dsn, $user, $pass );
+        return new \FluentPDO($pdo);
     }
 
 }

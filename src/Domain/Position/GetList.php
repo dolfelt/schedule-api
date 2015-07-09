@@ -1,7 +1,7 @@
 <?php
-namespace App\Domain\Shift;
+namespace App\Domain\Position;
 
-use App\Data\Mapper\ShiftMapper;
+use App\Data\Mapper\PositionMapper;
 use App\Data\Paginate;
 use Aura\Payload\Payload;
 use Spark\Adr\DomainInterface;
@@ -9,13 +9,12 @@ use Spark\Adr\DomainInterface;
 class GetList implements DomainInterface
 {
 
-    protected $shifts;
     /**
-     * @var ShiftMapper
+     * @var PositionMapper
      */
     protected $mapper;
 
-    public function __construct(ShiftMapper $mapper)
+    public function __construct(PositionMapper $mapper)
     {
         $this->mapper = $mapper;
     }
@@ -23,7 +22,7 @@ class GetList implements DomainInterface
     public function __invoke(array $input)
     {
         $input += [
-            'user_id' => false,
+            'q' => false,
         ] + Paginate::$defaultOptions;
 
         $payload = new Payload();
@@ -32,16 +31,16 @@ class GetList implements DomainInterface
         $output = [];
 
         $options = array_filter([
-            'user_id' => $input['user_id'],
-            'limit'   => $input['limit'], // TODO: Simplify this so I don't need to pass the vars somehow.
-            'page'    => $input['page'],
+            'search' => $input['q'],
+            'limit'  => $input['limit'], // TODO: Simplify this so I don't need to pass the vars somehow.
+            'page'   => $input['page'],
         ]);
 
-        list($shifts, $paginate) = $this->mapper->getShifts($options);
+        list($positions, $paginate) = $this->mapper->getPositions($options);
 
         $output['meta']['paginate'] = $paginate->getMeta();
 
-        $output['shifts'] = $shifts;
+        $output['positions'] = $positions;
 
         $payload->setOutput($output);
 

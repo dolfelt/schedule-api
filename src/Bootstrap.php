@@ -8,40 +8,28 @@ class Bootstrap
 {
     protected $injector;
 
-    public function __construct()
+    protected $config;
+
+    public function __construct(Injector $injector)
     {
-        $this->injector = new Injector;
+        $this->injector = $injector;
+    }
 
-        // Setup dependencies for the application
-
+    public function boot()
+    {
         $this->setupDatabase();
     }
 
     protected function setupDatabase()
     {
-        $database = DatabaseFactory::connect();
+        $config = [
+            'dsn' => $_ENV['PDO_DSN'],
+            'user' => $_ENV['PDO_USER'],
+            'pass' => $_ENV['PDO_PASS']
+        ];
+        $database = DatabaseFactory::connect($config);
         $this->injector->share($database);
 
-        foreach ($this->getMappers() as $mapper) {
-            $this->injector->share('/App/Data/Mapper/' . $mapper);
-        }
-    }
-
-    protected function getMappers()
-    {
-        return [
-            'ShiftMapper',
-        ];
-    }
-
-    /**
-     * Get the injector for the application.
-     *
-     * @return Injector
-     */
-    public function getInjector()
-    {
-        return $this->injector;
     }
 
 }

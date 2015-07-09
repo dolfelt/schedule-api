@@ -1,17 +1,34 @@
 <?php
 namespace App\Data;
 
-use LessQL\Database;
-
-class Mapper
+abstract class Mapper
 {
     /**
-     * @var Database
+     * @var \FluentPDO
      */
     protected $db;
 
-    public function __construct(Database $db)
+    protected $entity;
+
+    public function __construct(\FluentPDO $db)
     {
+        if (!$this->entity) {
+            throw new \Exception('Must include an $entity parameter.');
+        }
         $this->db = $db;
+    }
+
+    public function mapObjects($result)
+    {
+        $entity = new $this->entity;
+
+        $output = [];
+        foreach ($result as $row) {
+            $object = clone $entity;
+            $object->mapData($row);
+            $output[] = $object;
+        }
+
+        return $output;
     }
 }
