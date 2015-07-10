@@ -18,17 +18,5 @@ abstract class Mapper
         $this->db = $db;
     }
 
-    public function mapObjects($result)
-    {
-        $entity = new $this->entity;
-
-        $output = [];
-        foreach ($result as $row) {
-            $object = clone $entity;
-            $object->mapData($row);
-            $output[] = $object;
-        }
-
-        return $output;
-    }
+    abstract protected function mapObjects(array $results);
 }
