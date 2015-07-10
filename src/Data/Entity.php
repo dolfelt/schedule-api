@@ -3,52 +3,60 @@ namespace App\Data;
 
 abstract class Entity implements \JsonSerializable
 {
-    protected $properties = [];
-
     protected $id;
-
-    private $data;
-
-    private $callMethods = ['get', 'set'];
-
-    public function __construct($data = [])
-    {
-        $this->data = $data;
-    }
+    protected $createdAt;
+    protected $updatedAt;
+    protected $deleted = false;
 
     public function getId()
     {
         return $this->id;
     }
 
-    public function mapData(array $row)
+    public function setId($id)
     {
-        $this->data = $row;
+        $this->id = (int)$id;
+    }
+
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = (new \DateTime($createdAt, new \DateTimeZone('UTC')))->format(\DateTime::ISO8601);
+    }
+
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = (new \DateTime($updatedAt, new \DateTimeZone('UTC')))->format(\DateTime::ISO8601);
+    }
+
+    public function getDeleted()
+    {
+        return $this->deleted;
+    }
+
+    public function setDeleted($deleted)
+    {
+        $this->deleted = (bool)$deleted;
     }
 
     public function jsonSerialize()
     {
-        return $this->data;
+        return $this->getData();
     }
 
-    public function __call($name, $args)
-    {
-        $action = substr($name, 0, 3);
-        if (!in_array($action, $this->callMethods)) {
-            throw new \Exception(sprintf("Method '%s' not found on the entity '%s'.", $name, get_called_class()));
-        }
-
-        $field = strtolower(preg_replace('/\B([A-Z])/', '_$1', substr($name, 3)));
-        if (!in_array($field, $this->properties)) {
-            throw new \Exception(sprintf("Property not found on the entity %s.", get_called_class()));
-        }
-
-        if ($action === 'get') {
-            return $this->data[$field];
-        }
-
-        if ($action === 'set') {
-            $this->data[$field] = $args[0];
-        }
-    }
+    /**
+     * TODO: Rename, could interfere if a record has a data column
+     *
+     * @return array
+     */
+    abstract public function getData();
 }
