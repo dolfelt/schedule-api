@@ -6,11 +6,13 @@
         "sparkphp/spark": "dev-master",
         "lichtner/fluentpdo": "dev-master",
         "robmorgan/phinx": "dev-master",
-        "nesbot/carbon": "dev-master"
+        "nesbot/carbon": "dev-master",
+        "firebase/php-jwt": "dev-master"
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
+            "App\\": "src/",
+            "Spark\\": "lib/"
         }
     },
     "authors": [

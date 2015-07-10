@@ -20,15 +20,17 @@ abstract class Mapper
 
     public function mapObjects($result)
     {
-        $entity = new $this->entity;
-
         $output = [];
         foreach ($result as $row) {
-            $object = clone $entity;
-            $object->mapData($row);
-            $output[] = $object;
+            $output[] = $this->mapObject($row);
         }
-
         return $output;
+    }
+
+    public function mapObject($row)
+    {
+        $object = new $this->entity;
+        $object->mapData($row);
+        return $object;
     }
 }
