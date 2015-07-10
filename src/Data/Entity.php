@@ -25,7 +25,7 @@ abstract class Entity implements \JsonSerializable
 
     public function setCreatedAt($createdAt)
     {
-        $this->createdAt = strtotime($createdAt);
+        $this->createdAt = (new \DateTime($createdAt, new \DateTimeZone('UTC')))->format(\DateTime::ISO8601);
     }
 
     public function getUpdatedAt()
@@ -35,7 +35,7 @@ abstract class Entity implements \JsonSerializable
 
     public function setUpdatedAt($updatedAt)
     {
-        $this->updatedAt = strtotime($updatedAt);
+        $this->updatedAt = (new \DateTime($updatedAt, new \DateTimeZone('UTC')))->format(\DateTime::ISO8601);
     }
 
     public function getDeleted()
