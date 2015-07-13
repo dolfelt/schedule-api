@@ -11,7 +11,9 @@ class LoginMapper extends Mapper
 
     public function getLoginById($id)
     {
-        return $this->db->from('logins')->where('id', $id)->fetch();
+        return $this->mapObject(
+            $this->db->from('logins')->where('id', $id)->fetch()
+        );
     }
 
     public function getLoginByEmail($email)
@@ -19,13 +21,9 @@ class LoginMapper extends Mapper
         $query = $this->db->from('logins')
             ->where('email', $email);
 
-        $login = $query->fetch();
-
-        if (!$login) {
-            return null;
-        }
-
-        return $this->mapObject($login);
+        return $this->mapObject(
+            $query->fetch()
+        );
     }
 
 }

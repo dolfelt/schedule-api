@@ -1,6 +1,7 @@
 <?php
 namespace App\Domain\Shift;
 
+use App\Data\Authenticator;
 use App\Data\Mapper\ShiftMapper;
 use App\Data\Paginate;
 use Aura\Payload\Payload;
@@ -15,13 +16,19 @@ class GetList implements DomainInterface
      */
     protected $mapper;
 
-    public function __construct(ShiftMapper $mapper)
+    protected $auth;
+
+    public function __construct(ShiftMapper $mapper, Authenticator $auth)
     {
         $this->mapper = $mapper;
+        $this->auth   = $auth;
     }
 
     public function __invoke(array $input)
     {
+        // Force a user to be able to use this.
+        $this->auth->ensureLogin();
+
         $input += [
             'user_id' => false,
         ] + Paginate::$defaultOptions;

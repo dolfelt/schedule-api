@@ -29,6 +29,9 @@ abstract class Mapper
 
     public function mapObject($row)
     {
+        if (!$row) {
+            return null;
+        }
         $object = new $this->entity;
         $object->mapData($row);
         return $object;
