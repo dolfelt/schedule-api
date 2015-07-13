@@ -2,12 +2,13 @@
 namespace App\Data;
 
 use App\Data\Entity\Login;
-use App\Data\Entity\User;
 use App\Data\Mapper\LoginMapper;
 use App\Data\Mapper\UserMapper;
 use Carbon\Carbon;
 use Spark\Auth\AbstractAuthenticator;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use JWT;
+use Spark\Auth\Exception\AuthException;
 
 class Authenticator extends AbstractAuthenticator
 {
@@ -35,14 +36,14 @@ class Authenticator extends AbstractAuthenticator
         $this->secret = $_ENV['JWT_SECRET'];
     }
 
-    public function getToken(Request $request)
+    public function getTokenFromRequest(Request $request)
     {
         return current($request->getHeader('Authorization'));
     }
 
-    public function isValid($token)
+    public function isValid()
     {
-        $data = $this->parseToken($token);
+        $data = $this->parseToken($this->getToken());
 
         if (!$data) {
             return false;
@@ -56,6 +57,13 @@ class Authenticator extends AbstractAuthenticator
         return $this->login;
     }
 
+    public function ensureLogin()
+    {
+        if (!$this->getLogin()) {
+            throw new AuthException("This method requires that you are logged in.");
+        }
+    }
+
     public function authenticate(Login $login, $password)
     {
         return $this->generateToken($login);
@@ -63,9 +71,9 @@ class Authenticator extends AbstractAuthenticator
 
     protected function parseToken($token)
     {
-        $data = \JWT::decode($token, $this->secret, ['HS256']);
+        $data = JWT::decode($token, $this->secret, ['HS256']);
 
-        if ($data && !empty($data->login_id)) {
+        if ($data && !empty($data->login_id) && !$this->login) {
             $this->login = $this->mapper->getLoginById($data->login_id);
         }
 
@@ -77,12 +85,12 @@ class Authenticator extends AbstractAuthenticator
         $token = [
             "iss"            => "http://api.example.com/v1",
             "aud"            => "http://api.example.com/v1",
-            "iat"            => Carbon::now()->getTimestamp(),
+            "iat"            => time(),
             "login_id"       => $login->getId(),
             "application_id" => 0,
         ];
 
-        return \JWT::encode($token, $this->secret, 'HS256');
+        return JWT::encode($token, $this->secret, 'HS256');
     }
 
     public static function hashPassword($password)

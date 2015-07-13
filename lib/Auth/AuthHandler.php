@@ -19,11 +19,11 @@ class AuthHandler
     public function __invoke(Request $request, Response $response, callable $next)
     {
 
-        $token = $this->authenticator->getToken($request);
+        $this->authenticator->parseRequest($request);
 
-        if ($token && !$this->authenticator->isValid($token)) {
-            throw new \Exception($this->authenticator->getErrorMessage());
-        }
+        // Throw an error if the token is invalid.
+        // Doesn't throw an error if the token is not set.
+        $this->authenticator->ensureValid();
 
         return $next($request, $response);
     }

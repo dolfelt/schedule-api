@@ -12,6 +12,9 @@ $injector->delegate(
     'App\ServerRequestFactory'
 );
 
+// Share the Authentication class across the request
+$injector->share('App\Data\Authenticator');
+
 $init = $injector->make('App\Bootstrap');
 $init->boot();
 
