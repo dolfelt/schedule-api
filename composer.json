@@ -4,15 +4,15 @@
     "license": "MIT",
     "require": {
         "sparkphp/spark": "dev-master",
+        "sparkphp/auth": "dev-master",
         "lichtner/fluentpdo": "dev-master",
         "robmorgan/phinx": "dev-master",
         "nesbot/carbon": "dev-master",
-        "firebase/php-jwt": "dev-master"
+        "firebase/php-jwt": "~2.2.0"
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/",
-            "Spark\\": "lib/"
+            "App\\": "src/"
         }
     },
     "authors": [

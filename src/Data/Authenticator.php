@@ -4,9 +4,8 @@ namespace App\Data;
 use App\Data\Entity\Login;
 use App\Data\Mapper\LoginMapper;
 use App\Data\Mapper\UserMapper;
-use Carbon\Carbon;
 use Spark\Auth\AbstractAuthenticator;
-use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\RequestInterface as Request;
 use JWT;
 use Spark\Auth\Exception\AuthException;
 
