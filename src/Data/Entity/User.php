@@ -10,6 +10,7 @@ class User extends Entity
 
     protected $properties = [
         'id',
+        'login_id',
         'account_id',
         'role',
         'first_name',
