@@ -47,6 +47,11 @@ class Login extends Entity
         return !empty($this->password);
     }
 
+    public function getPasswordHash()
+    {
+        return $this->password;
+    }
+
     public function setPassword($password)
     {
         $this->password = Authenticator::hashPassword($password);

@@ -30,7 +30,7 @@ class Authenticate implements DomainInterface
         }
 
         $email = $input['email'];
-        $password = $input['email'];
+        $password = $input['password'];
 
         $login = $this->loginMapper->getLoginByEmail($email);
 

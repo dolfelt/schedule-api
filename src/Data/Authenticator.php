@@ -65,6 +65,9 @@ class Authenticator extends AbstractAuthenticator
 
     public function authenticate(Login $login, $password)
     {
+        if (!static::validatePassword($password, $login->getPasswordHash())) {
+            return null;
+        }
         return $this->generateToken($login);
     }
 
